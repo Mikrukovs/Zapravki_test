@@ -1,7 +1,16 @@
 import { WebHaptics } from 'https://cdn.jsdelivr.net/npm/web-haptics@0.0.6/+esm';
 
-const haptics = new WebHaptics({ debug: true });
+const haptics = new WebHaptics({ debug: false });
 let lastHapticLiter = -1;
+let hapticsReady = false;
+
+function initHaptics() {
+  if (hapticsReady) return;
+  hapticsReady = true;
+  haptics.trigger('selection');
+}
+
+document.addEventListener('pointerdown', initHaptics, { once: true });
 
 const track = document.getElementById('slider-track');
 const canvas = document.getElementById('slider-canvas');
