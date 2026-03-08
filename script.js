@@ -256,8 +256,8 @@ function setLiters(val, fromDrag = false) {
     if (fromDrag) {
       if (selectedLiters !== lastHapticLiter) {
         lastHapticLiter = selectedLiters;
-        const intensity = 0.15 + 0.85 * (selectedLiters / MAX_LITERS);
-        haptics.trigger([{ duration: 30, intensity }]);
+        haptics.cancel();
+        haptics.trigger('selection');
       }
     } else {
       haptics.trigger('nudge');
