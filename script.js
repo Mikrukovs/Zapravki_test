@@ -1,4 +1,6 @@
 let lastHapticLiter = -1;
+let hapticInterval = null;
+let hapticLiterChanged = false;
 
 const hapticCheckbox = document.createElement('input');
 hapticCheckbox.type = 'checkbox';
@@ -13,14 +15,27 @@ function hapticTick() {
   hapticLabel.click();
 }
 
+function startHapticLoop() {
+  if (hapticInterval) return;
+  hapticInterval = setInterval(() => {
+    if (hapticLiterChanged) {
+      hapticLiterChanged = false;
+      hapticTick();
+    }
+  }, 50);
+}
+
+function stopHapticLoop() {
+  if (hapticInterval) {
+    clearInterval(hapticInterval);
+    hapticInterval = null;
+  }
+}
+
 const canVibrate = typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function';
 
-function hapticBurst(pattern) {
-  if (canVibrate) {
-    navigator.vibrate(pattern);
-  } else {
-    hapticTick();
-  }
+function hapticBurst() {
+  hapticTick();
 }
 
 const track = document.getElementById('slider-track');
@@ -267,10 +282,10 @@ function setLiters(val, fromDrag = false) {
     if (fromDrag) {
       if (selectedLiters !== lastHapticLiter) {
         lastHapticLiter = selectedLiters;
-        hapticTick();
+        hapticLiterChanged = true;
       }
     } else {
-      hapticBurst([30, 50, 30]);
+      hapticBurst();
     }
   }
 }
@@ -291,6 +306,7 @@ function onPointerDown(e) {
   updateSelectFromPointer(e.clientY);
   targetPinch = PINCH_AMOUNT;
   startAnim();
+  startHapticLoop();
 }
 
 function onPointerMove(e) {
@@ -304,6 +320,7 @@ function onPointerUp() {
   isDragging = false;
   targetPinch = 0;
   startAnim();
+  stopHapticLoop();
 }
 
 track.addEventListener('pointerdown', onPointerDown);
