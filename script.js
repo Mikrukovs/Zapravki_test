@@ -1,16 +1,27 @@
-import { WebHaptics } from 'https://cdn.jsdelivr.net/npm/web-haptics@0.0.6/+esm';
-
-const haptics = new WebHaptics({ debug: false });
 let lastHapticLiter = -1;
-let hapticsReady = false;
 
-function initHaptics() {
-  if (hapticsReady) return;
-  hapticsReady = true;
-  haptics.trigger('selection');
+const hapticCheckbox = document.createElement('input');
+hapticCheckbox.type = 'checkbox';
+hapticCheckbox.setAttribute('switch', '');
+hapticCheckbox.style.cssText = 'position:fixed;top:-100px;left:-100px;opacity:0;pointer-events:none;';
+const hapticLabel = document.createElement('label');
+hapticLabel.appendChild(hapticCheckbox);
+hapticLabel.style.cssText = 'position:fixed;top:-100px;left:-100px;';
+document.body.appendChild(hapticLabel);
+
+function hapticTick() {
+  hapticLabel.click();
 }
 
-document.addEventListener('pointerdown', initHaptics, { once: true });
+const canVibrate = typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function';
+
+function hapticBurst(pattern) {
+  if (canVibrate) {
+    navigator.vibrate(pattern);
+  } else {
+    hapticTick();
+  }
+}
 
 const track = document.getElementById('slider-track');
 const canvas = document.getElementById('slider-canvas');
@@ -256,11 +267,10 @@ function setLiters(val, fromDrag = false) {
     if (fromDrag) {
       if (selectedLiters !== lastHapticLiter) {
         lastHapticLiter = selectedLiters;
-        haptics.cancel();
-        haptics.trigger('selection');
+        hapticTick();
       }
     } else {
-      haptics.trigger('nudge');
+      hapticBurst([30, 50, 30]);
     }
   }
 }
