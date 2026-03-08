@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slider Playground</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="playground">
+    <div class="slider-row">
+      <div class="price" id="price">3 500 ₽</div>
+      <div class="slider-track" id="slider-track">
+        <canvas class="slider-canvas" id="slider-canvas"></canvas>
+        <span class="full-tank-label" id="full-tank-label">полный бак</span>
+      </div>
+      <div class="controls">
+        <button class="ctrl-btn" id="btn-plus">+</button>
+        <div class="liters-badge" id="liters-badge">60 л</div>
+        <button class="ctrl-btn" id="btn-minus">–</button>
+      </div>
+      <div></div>
+      <button class="refuel-btn" id="refuel-btn">Заправить</button>
+      <div></div>
+    </div>
+  </div>
+  <script type="module" src="script.js"></script>
+</body>
+</html>
